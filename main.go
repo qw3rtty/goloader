@@ -54,5 +54,5 @@ func main() {
         }
 
         // Do the system magic
-        syscall.ExecuteSystemCall(payload)
+        syscall.ExecuteSystemCallInNewProcess(payload)
     }

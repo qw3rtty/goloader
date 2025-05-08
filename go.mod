@@ -1,5 +1,5 @@
 module goloader
 
-go 1.24.2
+go 1.23
 
 require golang.org/x/sys v0.32.0 // indirect

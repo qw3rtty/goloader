@@ -8,7 +8,9 @@ import (
     "bytes"
 )
 
-func ExecuteSystemCall(command string) bool {
+
+
+func ExecuteSystemCallInNewProcess(command string) bool {
     // Check if command exists
     if len(command) == 0 {
         return false
